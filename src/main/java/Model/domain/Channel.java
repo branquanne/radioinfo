@@ -24,4 +24,20 @@ public class Channel {
     public Image getThumbnail() {
         return thumbnail;
     }
+
+    public void setPrograms(List<Program> programs) {
+        this.programs = programs;
+    }
+
+    public void setChannelId(int channelId) {
+        this.channelId = channelId;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public void setThumbnail(Image thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 }

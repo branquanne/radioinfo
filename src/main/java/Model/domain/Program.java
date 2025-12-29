@@ -34,4 +34,28 @@ public class Program {
     public Image getThumbnail() {
         return thumbnail;
     }
+
+    public void setProgramId(int programId) {
+        this.programId = programId;
+    }
+
+    public void setProgramTitle(String programTitle) {
+        this.programTitle = programTitle;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setThumbnail(Image thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 }
