@@ -4,58 +4,58 @@ import java.awt.*;
 import java.time.LocalDateTime;
 
 public class Program {
-    private int programId;
-    private String programTitle;
-    private String description;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Image thumbnail;
+  private int programId;
+  private String programTitle;
+  private String description;
+  private LocalDateTime startTime;
+  private LocalDateTime endTime;
+  private Image thumbnail;
 
-    public int getProgramId() {
-        return programId;
-    }
+  public int getProgramId() {
+    return programId;
+  }
 
-    public String getProgramTitle() {
-        return programTitle;
-    }
+  public String getProgramTitle() {
+    return programTitle;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
+  public LocalDateTime getStartTime() {
+    return startTime;
+  }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
+  public LocalDateTime getEndTime() {
+    return endTime;
+  }
 
-    public Image getThumbnail() {
-        return thumbnail;
-    }
+  public Image getThumbnail() {
+    return thumbnail;
+  }
 
-    public void setProgramId(int programId) {
-        this.programId = programId;
-    }
+  public void setProgramId(int programId) {
+    this.programId = programId;
+  }
 
-    public void setProgramTitle(String programTitle) {
-        this.programTitle = programTitle;
-    }
+  public void setProgramTitle(String programTitle) {
+    this.programTitle = programTitle;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
+  public void setStartTime(LocalDateTime startTime) {
+    this.startTime = startTime;
+  }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
+  public void setEndTime(LocalDateTime endTime) {
+    this.endTime = endTime;
+  }
 
-    public void setThumbnail(Image thumbnail) {
-        this.thumbnail = thumbnail;
-    }
+  public void setThumbnail(Image thumbnail) {
+    this.thumbnail = thumbnail;
+  }
 }
