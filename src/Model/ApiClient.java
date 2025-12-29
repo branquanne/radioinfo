@@ -6,9 +6,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class GetInfo {
+public class ApiClient {
 
-    public GetInfo() {
+    Parser parser = new Parser();
+
+    public ApiClient() {
     }
 
     public void returnInfo() {
@@ -26,5 +28,6 @@ public class GetInfo {
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 }
