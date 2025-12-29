@@ -3,19 +3,15 @@ package View;
 import javax.swing.*;
 
 public class MainGui {
-    private static JFrame frame;
     private static JMenuBar menuBar;
-    private static JMenu channelsMenu;
-    private static JMenu programsMenu;
-    private static JMenuItem showChannelsTable;
-    private static JMenuItem showProgramsTable;
+    private JTable programsTable;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MainGui::showGUI);
     }
 
     private static void showGUI() {
-        frame = new JFrame("Radio Info");
+        JFrame frame = new JFrame("Radio Info");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
         initMenu();
@@ -27,17 +23,29 @@ public class MainGui {
     private static void initMenu() {
         menuBar = new JMenuBar();
 
-        channelsMenu = new JMenu("Channels");
-        programsMenu = new JMenu("Programs");
+        JMenu channelsMenu = new JMenu("Channels");
+        JMenu programsMenu = new JMenu("Programs");
 
-        showChannelsTable = new JMenuItem("Show Table");
-        showProgramsTable = new JMenuItem("Show Table");
+        JMenuItem showChannelsTable = new JMenuItem("Show Table");
+        JMenuItem showProgramsTable = new JMenuItem("Show Table");
 
         channelsMenu.add(showChannelsTable);
         programsMenu.add(showProgramsTable);
 
         menuBar.add(channelsMenu);
         menuBar.add(programsMenu);
+    }
+
+    private void showChannelsTable() {
+
+        Object[][] channelData = {{"FM-radio", "14.00"}, {"P3", "13.55"}};
+        String[] columnNames = {"Channel", "Time"};
+        JTable channelsTable = new JTable(channelData, columnNames);
+
+    }
+
+    private void showProgramsTable() {
+
     }
 
 }

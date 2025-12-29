@@ -9,8 +9,7 @@ import java.util.List;
 
 public class ApiClient {
     List<String> channels;
-
-    Parser parser = new Parser();
+    List<String> programs;
 
     public ApiClient() {
     }
