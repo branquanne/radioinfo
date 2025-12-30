@@ -25,10 +25,8 @@ public class Program {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("starttimeutc")
     private LocalDateTime startTime;
 
-    @JsonProperty("endtimeutc")
     private LocalDateTime endTime;
 
     @JsonProperty("imageurl")
@@ -64,7 +62,7 @@ public class Program {
     public String getThumbnailLink() {
         return thumbnailLink;
     }
-    
+
     public static class ProgramRef {
         @JsonProperty("id")
         private int id;
@@ -96,8 +94,4 @@ public class Program {
             return name;
         }
     }
-
-    /*public void setThumbnail(Image thumbnail) {
-        this.thumbnail = thumbnail;
-    }*/
 }

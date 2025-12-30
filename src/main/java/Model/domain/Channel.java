@@ -10,7 +10,7 @@ public class Channel {
     private List<Program> programs;
     private int channelId;
     private String channelName;
-    //private Image thumbnail;
+    private String thumbnailLink;
 
     public List<Program> getPrograms() {
         return programs;
@@ -26,9 +26,9 @@ public class Channel {
         return channelName;
     }
 
-  /*public Image getThumbnail() {
-    return thumbnail;
-  }*/
+    public String getThumbnailLink() {
+        return thumbnailLink;
+    }
 
     public void setPrograms(List<Program> programs) {
         this.programs = programs;
@@ -42,7 +42,4 @@ public class Channel {
         this.channelName = channelName;
     }
 
-    /*public void setThumbnail(Image thumbnail) {
-        this.thumbnail = thumbnail;
-    }*/
 }
