@@ -1,7 +1,6 @@
 package Model;
 
 import Model.domain.Channel;
-import Model.domain.Program;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,20 +13,11 @@ import java.util.List;
 public class ApiClient {
     List<Channel> channels = new ArrayList<>();
 
-    public ApiClient() {
-    }
-
-    public void returnInfo() {
-    }
-
-    public List<Channel> fetchChannels() {
+    private void fetchChannels() {
         try {
             URI uri = URI.create("https://api.sr.se/api/v2/channels?format=json&indent=true");
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            Parser p = new Parser(response);
-            return p.parseChannels();
+            Parser p = createHttpClient(uri);
+            this.channels = p.parseChannels();
 
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
@@ -35,25 +25,30 @@ public class ApiClient {
 
     }
 
-    public List<Program> fetchPrograms() {
-        try {
-            URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?format=json&indent=true");
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            Parser p = new Parser(response);
-            return p.parsePrograms();
+    private void fetchPrograms(List<Channel> channels) {
+        for (Channel ch : channels) {
+            try {
+                URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + ch.getChannelId() + "&format=json&indent=true");
+                Parser p = createHttpClient(uri);
+                ch.setPrograms(p.parsePrograms());
 
-        } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
+            } catch (InterruptedException | IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    public List<Channel> getChannels() {
+    private Parser createHttpClient(URI uri) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return new Parser(response);
+    }
+
+    public List<Channel> fetchData() {
+        fetchChannels();
+        fetchPrograms(channels);
+
         return channels;
-    }
-
-    public List<Program> getPrograms(Channel channel) {
-        return channel.getPrograms();
     }
 }

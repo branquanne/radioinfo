@@ -1,21 +1,32 @@
 package Controller;
 
-import java.net.http.HttpResponse;
+import Model.ApiClient;
+import Model.domain.Channel;
+import Model.domain.Program;
 
-import View.MainGui;
+import java.util.List;
 
 public class Controller {
 
-  public Controller() {
-    buildGUI();
-  }
+    public Controller() {
+        buildGUI();
+    }
 
-  private void buildGUI() {
-    MainGui mainGui = new MainGui();
-    mainGui.showGUI();
-  }
+    private void buildGUI() {
+        //MainGui mainGui = new MainGui();
+        //mainGui.showGUI();
 
-  private void fetchData() {
-  }
+        ApiClient apiClient = new ApiClient();
+        List<Channel> channels = apiClient.fetchData();
+
+        for (Channel ch : channels) {
+            System.out.println("Channel name (id): " + ch.getChannelName() + "(" + ch.getChannelId() + ")");
+            for (Program pr : ch.getPrograms()) {
+                System.out.println("Program name (id): " + pr.getProgramTitle() + "(" + pr.getProgramId() + ")");
+            }
+        }
+
+    }
+
 
 }

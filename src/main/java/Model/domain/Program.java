@@ -1,61 +1,103 @@
 package Model.domain;
 
-import java.awt.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Program {
-  private int programId;
-  private String programTitle;
-  private String description;
-  private LocalDateTime startTime;
-  private LocalDateTime endTime;
-  private Image thumbnail;
+    @JsonProperty("program")
+    private ProgramRef program;
 
-  public int getProgramId() {
-    return programId;
-  }
+    @JsonProperty("channel")
+    private ChannelRef channel;
 
-  public String getProgramTitle() {
-    return programTitle;
-  }
+    @JsonProperty("episodeid")
+    private int episodeId;
 
-  public String getDescription() {
-    return description;
-  }
+    @JsonProperty("title")
+    private String title;
 
-  public LocalDateTime getStartTime() {
-    return startTime;
-  }
+    @JsonProperty("subtitle")
+    private String subtitle;
 
-  public LocalDateTime getEndTime() {
-    return endTime;
-  }
+    @JsonProperty("description")
+    private String description;
 
-  public Image getThumbnail() {
-    return thumbnail;
-  }
+    @JsonProperty("starttimeutc")
+    private LocalDateTime startTime;
 
-  public void setProgramId(int programId) {
-    this.programId = programId;
-  }
+    @JsonProperty("endtimeutc")
+    private LocalDateTime endTime;
 
-  public void setProgramTitle(String programTitle) {
-    this.programTitle = programTitle;
-  }
+    @JsonProperty("imageurl")
+    private String thumbnailLink;
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
 
-  public void setStartTime(LocalDateTime startTime) {
-    this.startTime = startTime;
-  }
+    @JsonProperty("id")
+    public int getProgramId() {
+        return program.id;
+    }
 
-  public void setEndTime(LocalDateTime endTime) {
-    this.endTime = endTime;
-  }
+    @JsonProperty("channelId")
+    public int getChannelId() {
+        return channel.getId();
+    }
 
-  public void setThumbnail(Image thumbnail) {
-    this.thumbnail = thumbnail;
-  }
+    public String getProgramTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public String getThumbnailLink() {
+        return thumbnailLink;
+    }
+    
+    public static class ProgramRef {
+        @JsonProperty("id")
+        private int id;
+
+        @JsonProperty("name")
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public static class ChannelRef {
+        @JsonProperty("id")
+        private int id;
+
+        @JsonProperty("name")
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    /*public void setThumbnail(Image thumbnail) {
+        this.thumbnail = thumbnail;
+    }*/
 }

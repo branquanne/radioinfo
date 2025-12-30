@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Parser {
-    private String json;
-    private ObjectMapper mapper = new ObjectMapper();
+    private final String json;
+    private final ObjectMapper mapper = new ObjectMapper();
 
 
     public Parser(HttpResponse<String> response) {
@@ -33,13 +33,16 @@ public class Parser {
             throw new RuntimeException(e);
         }
 
+
     }
 
     public List<Program> parsePrograms() {
         try {
+            //System.out.println(json);
             JsonNode root = mapper.readTree(json);
-            JsonNode programsNode = root.path("programs");
+            JsonNode programsNode = root.path("schedule");
             if (programsNode.isMissingNode() || !programsNode.isArray()) {
+                System.out.println("hellooooo");
                 return Collections.emptyList();
             }
             return mapper.convertValue(programsNode, new TypeReference<List<Program>>() {
