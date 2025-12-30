@@ -22,8 +22,9 @@ public class Controller {
         for (Channel ch : channels) {
             System.out.println("Channel name (id): " + ch.getChannelName() + "(" + ch.getChannelId() + ")");
             for (Program pr : ch.getPrograms()) {
-                System.out.println("Program name (id): " + pr.getProgramTitle() + "(" + pr.getProgramId() + ")");
+                System.out.println("\tProgram name (id): " + pr.getProgramTitle() + "(" + pr.getProgramId() + ")");
             }
+            System.out.println("\n\n");
         }
 
     }
