@@ -23,6 +23,7 @@ public class Controller {
             System.out.println("Channel name (id): " + ch.getChannelName() + "(" + ch.getChannelId() + ")");
             for (Program pr : ch.getPrograms()) {
                 System.out.println("\tProgram name (id): " + pr.getProgramTitle() + "(" + pr.getProgramId() + ")");
+                System.out.println("\tImage link: " + pr.getThumbnailLink());
             }
             System.out.println("\n\n");
         }
