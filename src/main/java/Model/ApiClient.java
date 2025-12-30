@@ -15,7 +15,7 @@ public class ApiClient {
 
     private void fetchChannels() {
         try {
-            URI uri = URI.create("https://api.sr.se/api/v2/channels?format=json&indent=true&pagination=false");
+            URI uri = URI.create("https://api.sr.se/api/v2/channels?format=json&pagination=false");
             Parser p = createHttpClient(uri);
             this.channels = p.parseChannels();
 
@@ -28,7 +28,7 @@ public class ApiClient {
     private void fetchPrograms(List<Channel> channels) {
         for (Channel ch : channels) {
             try {
-                URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + ch.getChannelId() + "&format=json&indent=true&pagination=false");
+                URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + ch.getChannelId() + "&format=json&pagination=false");
                 Parser p = createHttpClient(uri);
                 ch.setPrograms(p.parsePrograms());
 
