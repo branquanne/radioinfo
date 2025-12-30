@@ -38,11 +38,9 @@ public class Parser {
 
     public List<Program> parsePrograms() {
         try {
-            //System.out.println(json);
             JsonNode root = mapper.readTree(json);
             JsonNode programsNode = root.path("schedule");
             if (programsNode.isMissingNode() || !programsNode.isArray()) {
-                System.out.println("hellooooo");
                 return Collections.emptyList();
             }
             return mapper.convertValue(programsNode, new TypeReference<List<Program>>() {
