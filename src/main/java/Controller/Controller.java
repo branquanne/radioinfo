@@ -2,51 +2,38 @@ package Controller;
 
 import Model.ApiClient;
 import Model.domain.Channel;
+import View.MainGui;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import java.util.List;
 
 public class Controller {
 
     public Controller() {
-        buildGUI();
+        SwingUtilities.invokeLater(this::buildGUI);
     }
 
     private void buildGUI() {
-        //MainGui mainGui = new MainGui();
-        //mainGui.showGUI();
+        MainGui mainGui = new MainGui();
+        mainGui.setChannelsTable(populateChannelsTable());
+        mainGui.showGUI();
 
-        ApiClient apiClient = new ApiClient();
-        List<Channel> channels = apiClient.fetchData();
-
-        Channel[] channelsAndPrograms = new Channel[channels.size()];
-        for (int i = 0; i < channels.size(); i++) {
-            channelsAndPrograms[i] = channels.get(i);
-        }
-
-        for (Channel ch : channels) {
-            System.out.println("Ch name: " + ch.getChannelName());
-            System.out.println("Tagline: " + ch.getTagline() + "\n");
-        }
-
-        // For the table to work i need to store the api data in arrays so that i can initialize the table right away
-        // so that the updater only needs to fetch a new table
-
-        TableModel model = new TableModel() {
-        }
-        JTable table = new JTable(channelsAndPrograms);
-
-        mainGui.initTables(table);
 
     }
 
-    public void getTableFromApi() {
+    private JTable populateChannelsTable() {
         ApiClient apiClient = new ApiClient();
         List<Channel> channels = apiClient.fetchData();
 
-        JTable table = new JTable();
+        String[] columnNames = {"Channel", "Description"};
+        Object[][] data = new Object[channels.size()][2];
+        for (int i = 0; i < channels.size(); i++) {
+            Channel ch = channels.get(i);
+            data[i][0] = ch.getChannelName();
+            data[i][1] = ch.getTagline();
+        }
 
+        return new JTable(data, columnNames);
     }
 
 
