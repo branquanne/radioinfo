@@ -32,7 +32,7 @@ public class Channel {
         return tagline;
     }
 
-
+    @JsonProperty("imageurl")
     public String getThumbnailLink() {
         return thumbnailLink;
     }
@@ -40,13 +40,4 @@ public class Channel {
     public void setPrograms(List<Program> programs) {
         this.programs = programs;
     }
-
-    public void setChannelId(int channelId) {
-        this.channelId = channelId;
-    }
-
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
-    }
-
 }
