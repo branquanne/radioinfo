@@ -1,17 +1,30 @@
 package View;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MainGui {
+    private static JFrame frame;
     private static JMenuBar menuBar;
-    private JTable programsTable;
+    private static JTable programsTable;
+    private static JTable channelsTable;
 
     public void showGUI() {
-        JFrame frame = new JFrame("Radio Info");
+        frame = new JFrame("Radio Info");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 600);
+        frame.setSize(800, 800);
         initMenu();
         frame.setJMenuBar(menuBar);
+
+        if (channelsTable == null) {
+            channelsTable = new JTable(new Object[][]{{"No channels", ""}}, new String[]{"Channel", "Tagline"});
+        }
+        if (programsTable == null) {
+            programsTable = new JTable(new Object[][]{{"No programs", ""}}, new String[]{"Program", "Tagline"});
+
+        }
+        frame.getContentPane().add(new JScrollPane(channelsTable), BorderLayout.CENTER);
+        frame.setLocationRelativeTo(null);
 
         frame.setVisible(true);
     }
@@ -25,6 +38,9 @@ public class MainGui {
         JMenuItem showChannelsTable = new JMenuItem("Show Table");
         JMenuItem showProgramsTable = new JMenuItem("Show Table");
 
+        showChannelsTable.addActionListener(e -> showTable(channelsTable));
+        showProgramsTable.addActionListener(e -> showTable(programsTable));
+
         channelsMenu.add(showChannelsTable);
         programsMenu.add(showProgramsTable);
 
@@ -32,18 +48,25 @@ public class MainGui {
         menuBar.add(programsMenu);
     }
 
-    public void initTables(JTable table) {
-        table = new JTable();
-
-
+    private static void showTable(JTable table) {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
     public void setProgramsTable(JTable programsTable) {
-        this.programsTable = programsTable;
+        MainGui.programsTable = programsTable;
     }
 
     public JTable getProgramsTable() {
         return programsTable;
+    }
+
+    public JTable getChannelsTable() {
+        return channelsTable;
+    }
+
+    public void setChannelsTable(JTable channelsTable) {
+        MainGui.channelsTable = channelsTable;
     }
 
 }
