@@ -13,25 +13,20 @@ public class Program {
     @JsonProperty("channel")
     private ChannelRef channel;
 
-    @JsonProperty("episodeid")
-    private int episodeId;
-
     @JsonProperty("title")
     private String title;
-
-    @JsonProperty("subtitle")
-    private String subtitle;
 
     @JsonProperty("description")
     private String description;
 
-    private LocalDateTime startTime;
+    @JsonProperty("starttimeutc")
+    private String startTime;
 
-    private LocalDateTime endTime;
+    @JsonProperty("endtimeutc")
+    private String endTime;
 
     @JsonProperty("imageurl")
     private String thumbnailLink;
-
 
     @JsonProperty("id")
     public int getProgramId() {
@@ -52,11 +47,11 @@ public class Program {
     }
 
     public LocalDateTime getStartTime() {
-        return startTime;
+        return LocalDateTime.parse(startTime);
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return LocalDateTime.parse(endTime);
     }
 
     public String getThumbnailLink() {
