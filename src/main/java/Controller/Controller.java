@@ -5,9 +5,12 @@ import Model.domain.Channel;
 import View.MainGui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
 public class Controller {
+    private List<Channel> channels;
+    private ApiClient apiClient;
 
     public Controller() {
         SwingUtilities.invokeLater(this::buildGUI);
@@ -21,19 +24,14 @@ public class Controller {
 
     }
 
-    private JTable populateChannelsTable() {
-        ApiClient apiClient = new ApiClient();
-        List<Channel> channels = apiClient.fetchData();
-
+    private DefaultTableModel createChannelsModel(List<Channel> channels) {
         String[] columnNames = {"Channel", "Description"};
-        Object[][] data = new Object[channels.size()][2];
-        for (int i = 0; i < channels.size(); i++) {
-            Channel ch = channels.get(i);
-            data[i][0] = ch.getChannelName();
-            data[i][1] = ch.getTagline();
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        for (Channel ch : channels) {
+            model.addRow(new Object[]{ch.getChannelName(), ch.getTagline()});
         }
 
-        return new JTable(data, columnNames);
+        return model;
     }
 
 
