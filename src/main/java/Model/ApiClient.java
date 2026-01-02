@@ -1,7 +1,5 @@
 package Model;
 
-import Model.domain.Channel;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -9,6 +7,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+
+import Model.Domain.Channel;
+import Model.Domain.Program;
 
 public class ApiClient {
     List<Channel> channels = new ArrayList<>();
@@ -28,9 +29,11 @@ public class ApiClient {
     private void fetchPrograms(List<Channel> channels) {
         for (Channel ch : channels) {
             try {
-                URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + ch.getChannelId() + "&format=json&pagination=false");
+                URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + ch.getChannelId()
+                        + "&format=json&pagination=false");
                 Parser p = createHttpClient(uri);
-                ch.setPrograms(p.parsePrograms());
+                List<Program> programs = p.parsePrograms();
+                ch.setPrograms(programs);
 
             } catch (InterruptedException | IOException e) {
                 throw new RuntimeException(e);

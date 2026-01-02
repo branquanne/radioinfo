@@ -1,11 +1,12 @@
 package Model;
 
-import Model.domain.Channel;
-import Model.domain.Program;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Model.Domain.Channel;
+import Model.Domain.Program;
 
 import java.net.http.HttpResponse;
 import java.util.Collections;
@@ -14,7 +15,6 @@ import java.util.List;
 public class Parser {
     private final String json;
     private final ObjectMapper mapper = new ObjectMapper();
-
 
     public Parser(HttpResponse<String> response) {
         this.json = response.body();
@@ -33,7 +33,6 @@ public class Parser {
             throw new RuntimeException(e);
         }
 
-
     }
 
     public List<Program> parsePrograms() {
@@ -45,6 +44,7 @@ public class Parser {
             }
             return mapper.convertValue(programsNode, new TypeReference<List<Program>>() {
             });
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

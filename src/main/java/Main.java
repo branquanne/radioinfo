@@ -1,6 +1,6 @@
-import Controller.Controller;
+import javax.swing.SwingUtilities;
 
-import javax.swing.*;
+import Controller.Controller;
 
 public class Main {
     public static void main(String[] args) {
