@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class MainGui {
@@ -53,20 +54,12 @@ public class MainGui {
         frame.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
-    public void setProgramsTable(JTable programsTable) {
-        MainGui.programsTable = programsTable;
+    public void setProgramsTableModel(DefaultTableModel model) {
+        programsTable.setModel(model);
     }
 
-    public JTable getProgramsTable() {
-        return programsTable;
-    }
-
-    public JTable getChannelsTable() {
-        return channelsTable;
-    }
-
-    public void setChannelsTable(JTable channelsTable) {
-        MainGui.channelsTable = channelsTable;
+    public void setChannelsTableModel(DefaultTableModel model) {
+        channelsTable.setModel(model);
     }
 
 }
