@@ -1,14 +1,19 @@
 package View;
 
+import Model.domain.Channel;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class MainGui {
-    private static JFrame frame;
-    private static JMenuBar menuBar;
-    private static JTable programsTable;
-    private static JTable channelsTable;
+    private JFrame frame;
+    private JMenuBar menuBar;
+    private JMenu channelsMenu;
+    private JTable programsTable;
+    private JTable channelsTable;
 
     public void showGUI() {
         frame = new JFrame("Radio Info");
@@ -17,23 +22,18 @@ public class MainGui {
         initMenu();
         frame.setJMenuBar(menuBar);
 
-        if (channelsTable == null) {
-            channelsTable = new JTable(new Object[][]{{"No channels", ""}}, new String[]{"Channel", "Tagline"});
-        }
-        if (programsTable == null) {
-            programsTable = new JTable(new Object[][]{{"No programs", ""}}, new String[]{"Program", "Tagline"});
+        channelsTable = new JTable(new DefaultTableModel(new String[]{"Channel", "Description"}, 0));
+        programsTable = new JTable(new DefaultTableModel(new String[]{"Program", "Start time", "End time"}, 0));
 
-        }
         frame.getContentPane().add(new JScrollPane(channelsTable), BorderLayout.CENTER);
         frame.setLocationRelativeTo(null);
-
         frame.setVisible(true);
     }
 
     private void initMenu() {
         menuBar = new JMenuBar();
 
-        JMenu channelsMenu = new JMenu("Channels");
+        channelsMenu = new JMenu("Channels");
         JMenu viewMenu = new JMenu("View");
 
         JMenuItem showChannels = new JMenuItem("Show Table");
@@ -44,7 +44,7 @@ public class MainGui {
 
         viewMenu.add(showPrograms);
         viewMenu.add(showChannels);
-        
+
         menuBar.add(channelsMenu);
         menuBar.add(viewMenu);
     }
@@ -76,4 +76,21 @@ public class MainGui {
         });
     }
 
+    public void updateChannelsMenu(List<Channel> channels, Consumer<Channel> onSelect) {
+        channelsMenu.removeAll();
+        if (channels.isEmpty()) {
+            JMenuItem empty = new JMenuItem("No channels");
+            empty.setEnabled(false);
+            channelsMenu.add(empty);
+        } else {
+            for (Channel ch : channels) {
+                JMenuItem item = new JMenuItem(ch.getChannelName());
+                item.addActionListener(e -> onSelect.accept(ch));
+                channelsMenu.add(item);
+            }
+        }
+
+        menuBar.revalidate();
+        menuBar.repaint();
+    }
 }
