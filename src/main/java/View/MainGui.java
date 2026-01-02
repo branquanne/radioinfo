@@ -30,28 +30,23 @@ public class MainGui {
         frame.setVisible(true);
     }
 
-    private static void initMenu() {
+    private void initMenu() {
         menuBar = new JMenuBar();
 
         JMenu channelsMenu = new JMenu("Channels");
-        JMenu programsMenu = new JMenu("Programs");
+        JMenu viewMenu = new JMenu("View");
 
-        JMenuItem showChannelsTable = new JMenuItem("Show Table");
-        JMenuItem showProgramsTable = new JMenuItem("Show Table");
+        JMenuItem showChannels = new JMenuItem("Show Table");
+        JMenuItem showPrograms = new JMenuItem("Show Table");
 
-        showChannelsTable.addActionListener(e -> showTable(channelsTable));
-        showProgramsTable.addActionListener(e -> showTable(programsTable));
+        showChannels.addActionListener(e -> showChannelsTable());
+        showPrograms.addActionListener(e -> showProgramsTable());
 
-        channelsMenu.add(showChannelsTable);
-        programsMenu.add(showProgramsTable);
-
+        viewMenu.add(showPrograms);
+        viewMenu.add(showChannels);
+        
         menuBar.add(channelsMenu);
-        menuBar.add(programsMenu);
-    }
-
-    private static void showTable(JTable table) {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
+        menuBar.add(viewMenu);
     }
 
     public void setProgramsTableModel(DefaultTableModel model) {
