@@ -18,7 +18,6 @@ public class Controller {
 
     private void buildGUI() {
         MainGui mainGui = new MainGui();
-        mainGui.setChannelsTable(populateChannelsTable());
         mainGui.showGUI();
 
 
@@ -34,5 +33,15 @@ public class Controller {
         return model;
     }
 
+    private DefaultTableModel createProgramsModel(Channel channel) {
+        String[] columnNames = {"Program", "Start", "End"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        if (channel == null || channel.getPrograms() == null) {
+            return model;
+        }
+        channel.getPrograms().forEach(program -> model.addRow(new Object[]{program.getProgramTitle(), program.getStartTime(), program.getEndTime()}));
+
+        return model;
+    }
 
 }
