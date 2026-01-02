@@ -10,6 +10,7 @@ public class Channel {
     private List<Program> programs;
     private int channelId;
     private String channelName;
+    private String tagline;
     private String thumbnailLink;
 
     public List<Program> getPrograms() {
@@ -25,6 +26,12 @@ public class Channel {
     public String getChannelName() {
         return channelName;
     }
+
+    @JsonProperty("tagline")
+    public String getTagline() {
+        return tagline;
+    }
+
 
     public String getThumbnailLink() {
         return thumbnailLink;

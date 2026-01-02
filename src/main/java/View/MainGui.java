@@ -32,8 +32,9 @@ public class MainGui {
         menuBar.add(programsMenu);
     }
 
-    public void initTables() {
-        programsTable = new JTable();
+    public void initTables(JTable table) {
+        table = new JTable();
+
 
     }
 
