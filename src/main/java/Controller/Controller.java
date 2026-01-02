@@ -4,6 +4,7 @@ import Model.ApiClient;
 import Model.domain.Channel;
 import Model.domain.Program;
 
+import javax.swing.*;
 import java.util.List;
 
 public class Controller {
@@ -27,6 +28,14 @@ public class Controller {
             }
             System.out.println("\n\n");
         }
+
+    }
+
+    public void getTableFromApi() {
+        ApiClient apiClient = new ApiClient();
+        List<Channel> channels = apiClient.fetchData();
+
+        JTable table = new JTable();
 
     }
 
