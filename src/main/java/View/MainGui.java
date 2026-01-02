@@ -55,11 +55,11 @@ public class MainGui {
     }
 
     public void setProgramsTableModel(DefaultTableModel model) {
-        programsTable.setModel(model);
+        SwingUtilities.invokeLater(() -> programsTable.setModel(model));
     }
 
     public void setChannelsTableModel(DefaultTableModel model) {
-        channelsTable.setModel(model);
+        SwingUtilities.invokeLater(() -> channelsTable.setModel(model));
     }
 
     public void showChannelsTable() {
