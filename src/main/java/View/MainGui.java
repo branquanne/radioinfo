@@ -62,4 +62,23 @@ public class MainGui {
         channelsTable.setModel(model);
     }
 
+    public void showChannelsTable() {
+        SwingUtilities.invokeLater(() -> {
+            frame.getContentPane().removeAll();
+            frame.getContentPane().add(new JScrollPane(channelsTable), BorderLayout.CENTER);
+            frame.revalidate();
+            frame.repaint();
+        });
+
+    }
+
+    public void showProgramsTable() {
+        SwingUtilities.invokeLater(() -> {
+            frame.getContentPane().removeAll();
+            frame.getContentPane().add(new JScrollPane(programsTable), BorderLayout.CENTER);
+            frame.revalidate();
+            frame.repaint();
+        });
+    }
+
 }
