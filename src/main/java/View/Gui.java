@@ -15,7 +15,7 @@ public class Gui {
     private JTable programsTable;
     private JTable channelsTable;
 
-    public void showGUI() {
+    public void show() {
         frame = new JFrame("Radio Info");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 800);

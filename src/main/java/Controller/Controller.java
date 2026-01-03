@@ -12,15 +12,15 @@ import java.util.concurrent.ExecutionException;
 public class Controller {
     private List<Channel> channels;
     private ApiClient apiClient;
-    private Gui mainGui;
+    private Gui gui;
 
     public Controller() {
         SwingUtilities.invokeLater(this::buildGUI);
     }
 
     private void buildGUI() {
-        mainGui = new Gui();
-        mainGui.showGUI();
+        gui = new Gui();
+        gui.show();
 
         loadChannelsAsynchronously();
     }
@@ -38,13 +38,13 @@ public class Controller {
                 try {
                     channels = get();
                     DefaultTableModel model = createChannelsModel(channels);
-                    mainGui.setChannelsTableModel(model);
-                    mainGui.updateChannelsMenu(channels, selectedChannel -> {
+                    gui.setChannelsTableModel(model);
+                    gui.updateChannelsMenu(channels, selectedChannel -> {
                         DefaultTableModel programsModel = createProgramsModel(selectedChannel);
-                        mainGui.setProgramsTableModel(programsModel);
-                        mainGui.showProgramsTable();
+                        gui.setProgramsTableModel(programsModel);
+                        gui.showProgramsTable();
                     });
-                    mainGui.showChannelsTable();
+                    gui.showChannelsTable();
                 } catch (ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
