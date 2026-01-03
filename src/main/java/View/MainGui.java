@@ -43,8 +43,8 @@ public class MainGui {
         channelsMenu = new JMenu("Channels");
         JMenu viewMenu = new JMenu("View");
 
-        JMenuItem showChannels = new JMenuItem("Show Table");
-        JMenuItem showPrograms = new JMenuItem("Show Table");
+        JMenuItem showChannels = new JMenuItem("Show Channels");
+        JMenuItem showPrograms = new JMenuItem("Show Programs");
 
         showChannels.addActionListener(e -> showChannelsTable());
         showPrograms.addActionListener(e -> showProgramsTable());
