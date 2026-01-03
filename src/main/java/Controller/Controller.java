@@ -2,7 +2,7 @@ package Controller;
 
 import Model.ApiClient;
 import Model.Domain.Channel;
-import View.MainGui;
+import View.Gui;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,14 +12,14 @@ import java.util.concurrent.ExecutionException;
 public class Controller {
     private List<Channel> channels;
     private ApiClient apiClient;
-    private MainGui mainGui;
+    private Gui mainGui;
 
     public Controller() {
         SwingUtilities.invokeLater(this::buildGUI);
     }
 
     private void buildGUI() {
-        mainGui = new MainGui();
+        mainGui = new Gui();
         mainGui.showGUI();
 
         loadChannelsAsynchronously();
@@ -54,25 +54,29 @@ public class Controller {
     }
 
     private DefaultTableModel createChannelsModel(List<Channel> channels) {
-        String[] columnNames = { "Channel", "Description" };
+        String[] columnNames = {"Channel", "Description"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         for (Channel ch : channels) {
-            model.addRow(new Object[] { ch.getChannelName(), ch.getTagline() });
+            model.addRow(new Object[]{ch.getChannelName(), ch.getTagline()});
         }
 
         return model;
     }
 
     private DefaultTableModel createProgramsModel(Channel channel) {
-        String[] columnNames = { "Program", "Start", "End" };
+        String[] columnNames = {"Program", "Start", "End"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         if (channel == null || channel.getPrograms() == null) {
             return model;
         }
         channel.getPrograms().forEach(program -> model
-                .addRow(new Object[] { program.getProgramTitle(), program.getStartTime(), program.getEndTime() }));
+                .addRow(new Object[]{program.getProgramTitle(), program.getStartTime(), program.getEndTime()}));
 
         return model;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Controller());
     }
 
 }

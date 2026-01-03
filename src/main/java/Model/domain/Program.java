@@ -1,9 +1,11 @@
 package Model.Domain;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.time.LocalDateTime;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Program {
@@ -47,11 +49,19 @@ public class Program {
     }
 
     public LocalDateTime getStartTime() {
-        return LocalDateTime.parse(startTime);
+        return parseTime(startTime);
     }
 
     public LocalDateTime getEndTime() {
-        return LocalDateTime.parse(endTime);
+        return parseTime(endTime);
+    }
+
+    private LocalDateTime parseTime(String timeString) {
+        if (timeString == null)
+            return null;
+        String numeric = timeString.replaceAll("[^0-9-]", "");
+        long millis = Long.parseLong(numeric);
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("UTC"));
     }
 
     public String getThumbnailLink() {

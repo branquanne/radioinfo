@@ -1,21 +1,14 @@
 package View;
 
-import java.awt.BorderLayout;
+import Model.Domain.Channel;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
-
-import Model.Domain.Channel;
-
-public class MainGui {
+public class Gui {
     private JFrame frame;
     private JMenuBar menuBar;
     private JMenu channelsMenu;
@@ -29,8 +22,8 @@ public class MainGui {
         initMenu();
         frame.setJMenuBar(menuBar);
 
-        channelsTable = new JTable(new DefaultTableModel(new String[] { "Channel", "Description" }, 0));
-        programsTable = new JTable(new DefaultTableModel(new String[] { "Program", "Start time", "End time" }, 0));
+        channelsTable = new JTable(new DefaultTableModel(new String[]{"Channel", "Description"}, 0));
+        programsTable = new JTable(new DefaultTableModel(new String[]{"Program", "Start time", "End time"}, 0));
 
         frame.getContentPane().add(new JScrollPane(channelsTable), BorderLayout.CENTER);
         frame.setLocationRelativeTo(null);
