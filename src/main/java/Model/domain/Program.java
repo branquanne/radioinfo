@@ -1,11 +1,12 @@
 package Model.Domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.format.DateTimeFormatter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Program {
@@ -57,11 +58,36 @@ public class Program {
     }
 
     private LocalDateTime parseTime(String timeString) {
-        if (timeString == null)
+        if (timeString == null) {
             return null;
-        String numeric = timeString.replaceAll("[^0-9-]", "");
+        }
+        String numeric = timeString.replaceAll("\\D+", "");
+        if (numeric.isEmpty()) {
+            return null;
+        }
+
         long millis = Long.parseLong(numeric);
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("UTC"));
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("GMT+1"));
+    }
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE;
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
+
+    public String getStartTimeString() {
+        return getStartTime().format(TIME_FORMAT);
+    }
+
+    public String getStartDateString() {
+        return getStartTime().format(DATE_FORMAT);
+    }
+
+
+    public String getEndTimeString() {
+        return getEndTime().format(TIME_FORMAT);
+    }
+
+    public String getEndDateString() {
+        return getEndTime().format(DATE_FORMAT);
     }
 
     public String getThumbnailLink() {
