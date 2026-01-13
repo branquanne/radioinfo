@@ -1,4 +1,7 @@
-package Model;
+package model;
+
+import model.domain.Channel;
+import model.domain.Program;
 
 import java.io.IOException;
 import java.net.URI;
@@ -7,9 +10,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-
-import Model.Domain.Channel;
-import Model.Domain.Program;
 
 public class ApiClient {
     List<Channel> channels = new ArrayList<>();

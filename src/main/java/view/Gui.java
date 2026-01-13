@@ -1,6 +1,6 @@
-package View;
+package view;
 
-import Model.Domain.Channel;
+import model.domain.Channel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -34,7 +34,7 @@ public class Gui {
         menuBar = new JMenuBar();
 
         channelsMenu = new JMenu("Channels");
-        JMenu viewMenu = new JMenu("View");
+        JMenu viewMenu = new JMenu("view");
 
         JMenuItem showChannels = new JMenuItem("Show Channels");
         JMenuItem showPrograms = new JMenuItem("Show Programs");
