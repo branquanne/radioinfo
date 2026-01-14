@@ -1,5 +1,6 @@
 package controller;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import model.ApiClient;
 import model.domain.Channel;
 import model.domain.Program;
@@ -15,7 +16,7 @@ public class Controller {
     private List<Channel> channels;
     private Gui gui;
     private final ApiClient apiClient = new ApiClient();
-    private Channel selectedChannel;
+    private Channel currentlyShowingChannel;
 
     public Controller() {
         SwingUtilities.invokeLater(this::buildGUI);
@@ -42,11 +43,8 @@ public class Controller {
                     DefaultTableModel model = createChannelsModel(channels);
                     gui.setChannelsTableModel(model);
                     gui.updateChannelsMenu(channels, selectedChannel -> {
-                        DefaultTableModel programsModel = createProgramsModel(
-                                selectedChannel
-                        );
-                        gui.setProgramsTableModel(programsModel);
-                        gui.showProgramsTable();
+                        currentlyShowingChannel = selectedChannel;
+                        loadProgramsForChannelAsynchronously(selectedChannel);
                     });
                     gui.showChannelsTable();
                 } catch (InterruptedException e) {
@@ -90,9 +88,9 @@ public class Controller {
         gui.setProgramsTableModel(createLoadingModel());
         gui.showProgramsTable();
 
-        SwingWorker<List<Program>, Void> worker = new SwingWorker<List<Program>, Void>() {
+        SwingWorker<List<Program>, Void> worker = new SwingWorker<>() {
             @Override
-            protected List<Program> doInBackground() throws Exception {
+            protected List<Program> doInBackground() {
                 return apiClient.fetchProgramsForChannel(channel.getChannelId());
             }
 
@@ -102,7 +100,7 @@ public class Controller {
                     List<Program> programs = get();
                     channel.setPrograms(programs);
 
-                    if (channel == selectedChannel) {
+                    if (channel == currentlyShowingChannel) {
                         gui.setProgramsTableModel(createProgramsModel(channel));
                         gui.showProgramsTable();
                     }
@@ -161,6 +159,7 @@ public class Controller {
     }
 
     public static void main(String[] args) {
+        FlatLightLaf.setup();
         SwingUtilities.invokeLater(Controller::new);
     }
 }

@@ -82,7 +82,7 @@ public class Gui {
 
     public void updateChannelsMenu(List<Channel> channels, Consumer<Channel> onSelect) {
         channelsMenu.removeAll();
-        if (channels.isEmpty()) {
+        if (channels == null || channels.isEmpty()) {
             JMenuItem empty = new JMenuItem("No channels");
             empty.setEnabled(false);
             channelsMenu.add(empty);
