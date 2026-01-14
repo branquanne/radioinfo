@@ -8,20 +8,19 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ApiClient {
-    List<Channel> channels = new ArrayList<>();
-
-    private void fetchChannels() {
+    private void fetchChannels(List<Channel> channels) {
         try {
             URI uri = URI.create("https://api.sr.se/api/v2/channels?format=json&pagination=false");
             Parser p = createHttpClient(uri);
-            this.channels = p.parseChannels();
-
-        } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
+            channels.clear();
+            channels.addAll(p.parseChannels());
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Channel fetch interrupted", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to fetch channels" + e.getMessage(), e);
         }
 
     }
