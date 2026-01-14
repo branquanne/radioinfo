@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApiClient {
@@ -48,7 +49,8 @@ public class ApiClient {
     }
 
     public List<Channel> fetchData() {
-        fetchChannels();
+        List<Channel> channels = new ArrayList<>();
+        fetchChannels(channels);
         fetchPrograms(channels);
 
         return channels;
