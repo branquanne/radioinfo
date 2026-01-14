@@ -2,6 +2,7 @@ package controller;
 
 import model.ApiClient;
 import model.domain.Channel;
+import model.domain.Program;
 import view.Gui;
 
 import javax.swing.*;
@@ -88,6 +89,32 @@ public class Controller {
 
         gui.setProgramsTableModel(createLoadingModel());
         gui.showProgramsTable();
+
+        SwingWorker<List<Program>, Void> worker = new SwingWorker<List<Program>, Void>() {
+            @Override
+            protected List<Program> doInBackground() throws Exception {
+                return apiClient.fetchProgramsForChannel(channel.getChannelId());
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    List<Program> programs = get();
+                    channel.setPrograms(programs);
+
+                    if (channel == selectedChannel) {
+                        gui.setProgramsTableModel(createProgramsModel(channel));
+                        gui.showProgramsTable();
+                    }
+                } catch (ExecutionException e) {
+                    JOptionPane.showMessageDialog(null, "Failed to fetch programs: " + e.getCause(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    JOptionPane.showMessageDialog(null, "Operation interrupted", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
+        worker.execute();
     }
 
     private DefaultTableModel createLoadingModel() {
