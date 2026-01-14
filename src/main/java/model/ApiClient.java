@@ -18,7 +18,7 @@ public class ApiClient {
         this.client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(10)).build();
     }
 
-    private List<Channel> fetchChannels(List<Channel> channels) {
+    public List<Channel> fetchChannels() {
         try {
             URI uri = URI.create("https://api.sr.se/api/v2/channels?format=json&pagination=false");
             HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
@@ -34,16 +34,15 @@ public class ApiClient {
 
     }
 
-    private List<Program> fetchProgramsForChannel(int channelId) {
+    public List<Program> fetchProgramsForChannel(int channelId) {
         try {
             URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + channelId
                     + "&format=json&pagination=false");
             HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             Parser p = new Parser(response);
             return p.parsePrograms();
-
-
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
