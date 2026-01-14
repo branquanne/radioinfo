@@ -90,6 +90,18 @@ public class Controller {
         gui.showProgramsTable();
     }
 
+    private DefaultTableModel createLoadingModel() {
+        String[] columnNames = {"Program", "Start", "End"};
+        DefaultTableModel loadingModel = new DefaultTableModel(columnNames, 0);
+        loadingModel.addRow(new Object[]{"Loading...", "", ""});
+        return loadingModel;
+    }
+
+    private DefaultTableModel createEmptyProgramsModel() {
+        String[] columnNames = {"Program", "Start", "End"};
+        return new DefaultTableModel(columnNames, 0);
+    }
+
     private DefaultTableModel createChannelsModel(List<Channel> channels) {
         String[] columnNames = {"Channel", "Description"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
