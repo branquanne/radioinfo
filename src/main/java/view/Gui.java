@@ -5,7 +5,10 @@ import model.domain.Channel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class Gui {
@@ -35,6 +38,7 @@ public class Gui {
 
         channelsMenu = new JMenu("Channels");
         JMenu viewMenu = new JMenu("view");
+
 
         JMenuItem showChannels = new JMenuItem("Show Channels");
         JMenuItem showPrograms = new JMenuItem("Show Programs");
@@ -83,10 +87,30 @@ public class Gui {
             empty.setEnabled(false);
             channelsMenu.add(empty);
         } else {
+            Map<String, List<Channel>> groups = new LinkedHashMap<>();
             for (Channel ch : channels) {
-                JMenuItem item = new JMenuItem(ch.getChannelName());
-                item.addActionListener(e -> onSelect.accept(ch));
-                channelsMenu.add(item);
+                String name = ch.getChannelName() == null ? "" : ch.getChannelName();
+                String group = name.contains(" ") ? name.split(" ", 2)[0] : name;
+                groups.computeIfAbsent(group, k -> new ArrayList<>()).add(ch);
+            }
+
+            for (Map.Entry<String, List<Channel>> entry : groups.entrySet()) {
+                List<Channel> groupsOfChannels = entry.getValue();
+
+                if (groupsOfChannels.size() == 1) {
+                    Channel ch = groupsOfChannels.getFirst();
+                    JMenuItem channelItem = new JMenuItem((ch.getChannelName()));
+                    channelItem.addActionListener(e -> onSelect.accept(ch));
+                    channelsMenu.add(channelItem);
+                } else {
+                    JMenu groupMenu = new JMenu(entry.getKey());
+                    for (Channel ch : groupsOfChannels) {
+                        JMenuItem channelItem = new JMenuItem(ch.getChannelName());
+                        channelItem.addActionListener(e -> onSelect.accept(ch));
+                        groupMenu.add(channelItem);
+                    }
+                    channelsMenu.add(groupMenu);
+                }
             }
         }
 
