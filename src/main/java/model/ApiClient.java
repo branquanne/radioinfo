@@ -8,16 +8,24 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.List;
 
 public class ApiClient {
-    private void fetchChannels(List<Channel> channels) {
+    private final HttpClient client;
+
+    public ApiClient() {
+        this.client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(10)).build();
+    }
+
+    private List<Channel> fetchChannels(List<Channel> channels) {
         try {
             URI uri = URI.create("https://api.sr.se/api/v2/channels?format=json&pagination=false");
-            Parser p = createHttpClient(uri);
-            channels.clear();
-            channels.addAll(p.parseChannels());
+            HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            Parser p = new Parser(response);
+            return p.parseChannels();
         } catch (InterruptedException e) {
             throw new RuntimeException("Channel fetch interrupted", e);
         } catch (IOException e) {
@@ -26,33 +34,19 @@ public class ApiClient {
 
     }
 
-    private void fetchPrograms(List<Channel> channels) {
-        for (Channel ch : channels) {
-            try {
-                URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + ch.getChannelId()
-                        + "&format=json&pagination=false");
-                Parser p = createHttpClient(uri);
-                List<Program> programs = p.parsePrograms();
-                ch.setPrograms(programs);
+    private List<Program> fetchProgramsForChannel(int channelId) {
+        try {
+            URI uri = URI.create("https://api.sr.se/api/v2/scheduledepisodes?channelid=" + channelId
+                    + "&format=json&pagination=false");
+            HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            Parser p = new Parser(response);
+            return p.parsePrograms();
 
-            } catch (InterruptedException | IOException e) {
-                throw new RuntimeException(e);
-            }
+
+        } catch (InterruptedException | IOException e) {
+            throw new RuntimeException(e);
         }
-    }
 
-    private Parser createHttpClient(URI uri) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return new Parser(response);
-    }
-
-    public List<Channel> fetchData() {
-        List<Channel> channels = new ArrayList<>();
-        fetchChannels(channels);
-        fetchPrograms(channels);
-
-        return channels;
     }
 }
