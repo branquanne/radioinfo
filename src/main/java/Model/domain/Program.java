@@ -67,27 +67,27 @@ public class Program {
         }
 
         long millis = Long.parseLong(numeric);
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("GMT+1"));
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("Europe/Stockholm"));
     }
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_DATE;
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
     public String getStartTimeString() {
-        return getStartTime().format(TIME_FORMAT);
+        return getStartTime() == null ? "" : getStartTime().format(TIME_FORMAT);
     }
 
     public String getStartDateString() {
-        return getStartTime().format(DATE_FORMAT);
+        return getStartTime() == null ? "" : getStartTime().format(DATE_FORMAT);
     }
 
 
     public String getEndTimeString() {
-        return getEndTime().format(TIME_FORMAT);
+        return getEndTime() == null ? "" : getEndTime().format(TIME_FORMAT);
     }
 
     public String getEndDateString() {
-        return getEndTime().format(DATE_FORMAT);
+        return getEndTime() == null ? "" : getEndTime().format(DATE_FORMAT);
     }
 
     public String getThumbnailLink() {
