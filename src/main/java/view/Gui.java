@@ -2,12 +2,9 @@ package view;
 
 import model.domain.Channel;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,6 +59,18 @@ public class Gui {
 
     public void setChannelsTableModel(DefaultTableModel model) {
         SwingUtilities.invokeLater(() -> channelsTable.setModel(model));
+    }
+
+    public void setChannelsTableRowHeight(int height) {
+        SwingUtilities.invokeLater(() -> channelsTable.setRowHeight(height));
+    }
+
+    public void setChannelsTableColumnWidth(int[] widths) {
+        SwingUtilities.invokeLater(() -> {
+            for (int i = 0; i < widths.length; i++) {
+                channelsTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
+            }
+        });
     }
 
     public void showChannelsTable() {
@@ -121,16 +130,4 @@ public class Gui {
         menuBar.repaint();
     }
 
-    public JLabel createImageLabel(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            BufferedImage image = ImageIO.read(url);
-
-            ImageIcon icon = new ImageIcon(image);
-            return new JLabel(icon);
-
-        } catch (Exception e) {
-            return new JLabel("No image");
-        }
-    }
 }
