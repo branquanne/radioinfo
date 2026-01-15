@@ -95,4 +95,8 @@ public class ChannelController {
 
         return model;
     }
+
+    public List<Channel> getChannels() {
+        return channels;
+    }
 }
