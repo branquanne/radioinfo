@@ -8,12 +8,16 @@ import view.MainFrame;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ProgramController {
     private final MainFrame mainFrame;
     private final ApiClient apiClient = new ApiClient();
+    private List<Program> displayedPrograms = Collections.emptyList();
 
     public ProgramController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -73,15 +77,35 @@ public class ProgramController {
         if (channel == null || channel.getPrograms() == null) {
             return model;
         }
-        channel
-                .getPrograms()
-                .forEach(program -> model.addRow(
-                        new Object[]{
-                                program.getProgramTitle(),
-                                program.getStartTimeString(),
-                                program.getEndTimeString(),
-                        }));
 
+        // Får inte riktigt detta med timmarna att fungera och vet inte riktigt vart jag går fel :/
+        LocalDateTime referencePoint = channel.getLastFetched();
+        LocalDateTime windowStart = null;
+        LocalDateTime windowEnd = null;
+        if (referencePoint != null) {
+            windowStart = referencePoint.minusHours(12);
+            windowEnd = referencePoint.plusHours(12);
+        }
+
+        List<Program> filteredPrograms = new ArrayList<>();
+        for (Program program : channel.getPrograms()) {
+            LocalDateTime start = program.getStartTime();
+            if (start == null) {
+                continue;
+            }
+            if (windowStart != null && windowEnd != null) {
+                if (start.isBefore(windowStart) || start.isAfter(windowEnd)) {
+                    continue;
+                }
+            }
+            filteredPrograms.add(program);
+            model.addRow(new Object[]{
+                    program.getProgramTitle(),
+                    program.getStartTimeString(),
+                    program.getEndTimeString()
+            });
+        }
+        displayedPrograms = filteredPrograms;
         return model;
     }
 
@@ -89,16 +113,17 @@ public class ProgramController {
         String[] columnNames = {"Program", "Start", "End"};
         DefaultTableModel loadingModel = new DefaultTableModel(columnNames, 0);
         loadingModel.addRow(new Object[]{"Loading...", "", ""});
+        displayedPrograms = Collections.emptyList();
         return loadingModel;
     }
 
     private void setSelectedChannel(Channel channel) {
         mainFrame.setProgramsSelectionListener(row -> {
-            if (channel.getPrograms() == null) {
+            if (displayedPrograms == null) {
                 return;
             }
 
-            Program program = channel.getPrograms().get(row);
+            Program program = displayedPrograms.get(row);
             ImageLoader loader = new ImageLoader();
             ImageIcon icon;
             try {

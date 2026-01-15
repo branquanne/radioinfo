@@ -3,6 +3,7 @@ package model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -11,9 +12,18 @@ public class Channel {
     private int channelId;
     private String channelName;
     private String tagline;
+    private LocalDateTime lastFetched;
 
     @JsonProperty("image")
     private String thumbnailLink;
+
+    public LocalDateTime getLastFetched() {
+        return lastFetched;
+    }
+
+    public void setLastFetched(LocalDateTime lastFetched) {
+        this.lastFetched = lastFetched;
+    }
 
     public List<Program> getPrograms() {
         return programs;
