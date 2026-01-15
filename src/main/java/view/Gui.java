@@ -21,7 +21,7 @@ public class Gui {
     public void show() {
         frame = new JFrame("Radio Info");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 800);
+        frame.setSize(1000, 800);
         initMenu();
         frame.setJMenuBar(menuBar);
 
@@ -37,18 +37,10 @@ public class Gui {
         menuBar = new JMenuBar();
 
         channelsMenu = new JMenu("Channels");
-        JMenu viewMenu = new JMenu("view");
-
-
+        JMenu viewMenu = new JMenu("View");
         JMenuItem showChannels = new JMenuItem("Show Channels");
-        JMenuItem showPrograms = new JMenuItem("Show Programs");
-
         showChannels.addActionListener(e -> showChannelsTable());
-        showPrograms.addActionListener(e -> showProgramsTable());
-
-        viewMenu.add(showPrograms);
         viewMenu.add(showChannels);
-
         menuBar.add(channelsMenu);
         menuBar.add(viewMenu);
     }
@@ -92,7 +84,7 @@ public class Gui {
         });
     }
 
-    public void updateChannelsMenu(List<Channel> channels, Consumer<Channel> onSelect) {
+    public void updateMenu(List<Channel> channels, Consumer<Channel> onSelect) {
         channelsMenu.removeAll();
         if (channels == null || channels.isEmpty()) {
             JMenuItem empty = new JMenuItem("No channels");
