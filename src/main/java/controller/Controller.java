@@ -18,6 +18,7 @@ public class Controller {
         channelController = new ChannelController(mainFrame, programController);
 
         channelController.start();
+        mainFrame.show();
     }
 
 
