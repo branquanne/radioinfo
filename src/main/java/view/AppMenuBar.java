@@ -9,21 +9,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class MenuBar {
-    private final JMenuBar menuBar = new JMenuBar();
+public class AppMenuBar extends JMenuBar {
     private final JMenu channelsMenu = new JMenu("Channels");
+    private Runnable refreshAction;
 
-    public MenuBar(Runnable showChannelsAction) {
-        menuBar.add(channelsMenu);
+    public AppMenuBar(Runnable showChannelsAction) {
+        add(channelsMenu);
         JMenuItem showChannels = new JMenuItem("Show Channels");
         showChannels.addActionListener(e -> showChannelsAction.run());
         JMenu viewMenu = new JMenu("View");
         viewMenu.add(showChannels);
-        menuBar.add(viewMenu);
+
+        JMenuItem refreshItem = new JMenuItem("Refresh Data");
+        refreshItem.addActionListener(e -> {
+            if (refreshAction != null) {
+                refreshAction.run();
+            }
+        });
+        viewMenu.add(refreshItem);
+
+        add(viewMenu);
     }
 
-    public JMenuBar getMenuBar() {
-        return menuBar;
+    public void setRefreshAction(Runnable refreshAction) {
+        this.refreshAction = refreshAction;
     }
 
     public void updateMenu(List<Channel> channels, Consumer<Channel> onSelect) {
@@ -59,5 +68,7 @@ public class MenuBar {
                 }
             }
         }
+        revalidate();
+        repaint();
     }
 }
