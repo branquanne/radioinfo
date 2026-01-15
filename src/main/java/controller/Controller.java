@@ -2,8 +2,8 @@ package controller;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import model.ApiClient;
-import model.domain.Channel;
-import model.domain.Program;
+import model.Channel;
+import model.Program;
 import view.Gui;
 
 import javax.imageio.ImageIO;
@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Controller {
 
@@ -24,8 +26,12 @@ public class Controller {
     private final ApiClient apiClient = new ApiClient();
     private Channel currentlyShowingChannel;
 
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
     public Controller() {
         SwingUtilities.invokeLater(this::buildGUI);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(scheduler::shutdownNow));
     }
 
     private void buildGUI() {
@@ -53,7 +59,7 @@ public class Controller {
                     gui.setChannelsTableRowHeight(70);
                     gui.setChannelsTableColumnWidth(new int[]{70, 240, 480});
 
-                    gui.updateChannelsMenu(channels, selectedChannel -> {
+                    gui.updateMenu(channels, selectedChannel -> {
                         currentlyShowingChannel = selectedChannel;
                         loadProgramsForChannelAsynchronously(selectedChannel);
                     });

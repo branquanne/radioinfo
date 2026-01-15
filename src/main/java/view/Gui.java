@@ -1,6 +1,6 @@
 package view;
 
-import model.domain.Channel;
+import model.Channel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
