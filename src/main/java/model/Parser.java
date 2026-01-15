@@ -26,7 +26,7 @@ public class Parser {
             if (channelIsNode.isMissingNode() || !channelIsNode.isArray()) {
                 return Collections.emptyList();
             }
-            return mapper.convertValue(channelIsNode, new TypeReference<List<Channel>>() {
+            return mapper.convertValue(channelIsNode, new TypeReference<>() {
             });
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -41,7 +41,7 @@ public class Parser {
             if (programsNode.isMissingNode() || !programsNode.isArray()) {
                 return Collections.emptyList();
             }
-            return mapper.convertValue(programsNode, new TypeReference<List<Program>>() {
+            return mapper.convertValue(programsNode, new TypeReference<>() {
             });
 
         } catch (JsonProcessingException e) {
