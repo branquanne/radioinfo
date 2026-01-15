@@ -1,200 +1,25 @@
 package controller;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import model.ApiClient;
-import model.Channel;
-import model.Program;
 import view.MainFrame;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class Controller {
-
-    private List<Channel> channels;
     private MainFrame mainFrame;
-    private final ApiClient apiClient = new ApiClient();
-    private Channel currentlyShowingChannel;
-
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private ProgramController programController;
+    private ChannelController channelController;
+    private RefreshData refresher;
 
     public Controller() {
-        SwingUtilities.invokeLater(this::buildGUI);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(scheduler::shutdownNow));
-    }
-
-    private void buildGUI() {
         mainFrame = new MainFrame();
-        mainFrame.show();
 
-        loadChannelsAsynchronously();
+        programController = new ProgramController(mainFrame);
+        channelController = new ChannelController(mainFrame, programController);
+
+        channelController.start();
     }
 
-    private void loadChannelsAsynchronously() {
-        SwingWorker<List<Channel>, Void> worker = new SwingWorker<>() {
-            @Override
-            protected List<Channel> doInBackground() {
-                return apiClient.fetchChannels();
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    channels = get();
-                    DefaultTableModel model = createChannelsModel(channels);
-                    mainFrame.setChannelsTableModel(model);
-
-                    // 64x64 pixels thumbnail with some padding, should be enough
-                    mainFrame.setChannelsTableRowHeight(70);
-                    mainFrame.setChannelsTableColumnWidth(new int[]{70, 240, 480});
-
-                    mainFrame.updateMenu(channels, selectedChannel -> {
-                        currentlyShowingChannel = selectedChannel;
-                        loadProgramsForChannelAsynchronously(selectedChannel);
-                    });
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Operation interrupted",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                } catch (ExecutionException e) {
-                    String message = e.getCause() != null
-                            ? e.getCause().getMessage()
-                            : e.getMessage();
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Failed to fetch data: " + message,
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        };
-        worker.execute();
-    }
-
-    private void loadProgramsForChannelAsynchronously(Channel channel) {
-        if (channel == null) {
-            mainFrame.setProgramsTableModel(createEmptyProgramsModel());
-            mainFrame.showProgramsTable();
-            return;
-        }
-
-        if (channel.getPrograms() != null && !channel.getPrograms().isEmpty()) {
-            mainFrame.setProgramsTableModel(createProgramsModel(channel));
-            mainFrame.showProgramsTable();
-            return;
-        }
-
-        mainFrame.setProgramsTableModel(createLoadingModel());
-        mainFrame.showProgramsTable();
-
-        SwingWorker<List<Program>, Void> worker = new SwingWorker<>() {
-            @Override
-            protected List<Program> doInBackground() {
-                return apiClient.fetchProgramsForChannel(channel.getChannelId());
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    List<Program> programs = get();
-                    channel.setPrograms(programs);
-
-                    if (channel == currentlyShowingChannel) {
-                        mainFrame.setProgramsTableModel(createProgramsModel(channel));
-                        mainFrame.showProgramsTable();
-                    }
-                } catch (ExecutionException e) {
-                    JOptionPane.showMessageDialog(null, "Failed to fetch programs: " + e.getCause(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    JOptionPane.showMessageDialog(null, "Operation interrupted", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        };
-        worker.execute();
-    }
-
-    private DefaultTableModel createLoadingModel() {
-        String[] columnNames = {"Program", "Start", "End"};
-        DefaultTableModel loadingModel = new DefaultTableModel(columnNames, 0);
-        loadingModel.addRow(new Object[]{"Loading...", "", ""});
-        return loadingModel;
-    }
-
-    private DefaultTableModel createEmptyProgramsModel() {
-        String[] columnNames = {"Program", "Start", "End"};
-        return new DefaultTableModel(columnNames, 0);
-    }
-
-    private DefaultTableModel createChannelsModel(List<Channel> channels) {
-        String[] columnNames = {"Thumbnail", "Channel", "Description"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 0) {
-                    return Icon.class;
-                }
-                return String.class;
-            }
-        };
-        for (Channel ch : channels) {
-            ImageIcon icon = null;
-            if (ch.getThumbnailLink() != null && !ch.getThumbnailLink().isBlank()) {
-                try {
-                    BufferedImage image = ImageIO.read(URI.create(ch.getThumbnailLink()).toURL());
-                    if (image != null) {
-                        BufferedImage scaledImage = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
-                        Graphics2D g = scaledImage.createGraphics();
-                        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                        g.drawImage(image.getScaledInstance(64, 64, Image.SCALE_SMOOTH), 0, 0, null);
-                        g.dispose();
-                        icon = new ImageIcon(scaledImage);
-
-                    }
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            model.addRow(new Object[]{icon, ch.getChannelName(), ch.getTagline()});
-        }
-
-        return model;
-    }
-
-    private DefaultTableModel createProgramsModel(Channel channel) {
-        String[] columnNames = {"Program", "Start", "End"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-        if (channel == null || channel.getPrograms() == null) {
-            return model;
-        }
-        channel
-                .getPrograms()
-                .forEach(program -> model.addRow(
-                        new Object[]{
-                                program.getProgramTitle(),
-                                program.getStartTimeString(),
-                                program.getEndTimeString(),
-                        }));
-
-        return model;
-    }
 
     public static void main(String[] args) {
         FlatMacLightLaf.setup();
