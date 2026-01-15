@@ -22,6 +22,10 @@ public class ChannelController {
         this.programController = programController;
     }
 
+    public void start() {
+        loadChannelsAsync();
+    }
+
     private void loadChannelsAsync() {
         SwingWorker<List<Channel>, Void> worker = new SwingWorker<>() {
             @Override
