@@ -17,6 +17,9 @@ public class Gui {
     private JMenu channelsMenu;
     private JTable programsTable;
     private JTable channelsTable;
+    private JPanel detailsPanel;
+    private JLabel detailsLabel;
+    private JTextArea detailsDescriptionArea;
 
     public void show() {
         frame = new JFrame("Radio Info");
@@ -28,9 +31,25 @@ public class Gui {
         channelsTable = new JTable(new DefaultTableModel(new String[]{"Channel", "Description"}, 0));
         programsTable = new JTable(new DefaultTableModel(new String[]{"Program", "Start time", "End time"}, 0));
 
+        initDetailsPanel();
+
         frame.getContentPane().add(new JScrollPane(channelsTable), BorderLayout.CENTER);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void initDetailsPanel() {
+        detailsPanel = new JPanel(new BorderLayout(8, 8));
+        detailsLabel = new JLabel();
+        detailsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        detailsDescriptionArea = new JTextArea();
+        detailsDescriptionArea.setLineWrap(true);
+        detailsDescriptionArea.setEditable(false);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(detailsLabel, BorderLayout.CENTER);
+        detailsPanel.add(topPanel, BorderLayout.NORTH);
+        detailsPanel.add(new JScrollPane(detailsDescriptionArea), BorderLayout.CENTER);
     }
 
     private void initMenu() {
