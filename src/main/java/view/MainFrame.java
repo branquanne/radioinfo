@@ -1,7 +1,6 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class MainFrame {
@@ -9,52 +8,29 @@ public class MainFrame {
     private final ChannelsPanel channelsPanel = new ChannelsPanel();
     private final ProgramsPanel programsPanel = new ProgramsPanel();
     private final DetailsPanel detailsPanel = new DetailsPanel();
+    private final WelcomePanel welcomePanel = new WelcomePanel();
     private final AppMenuBar appMenuBar;
 
-    public MainFrame(){
+    public MainFrame() {
+        appMenuBar = new AppMenuBar(this::showChannelsTable);
 
-    }
-
-
-
-    public void show() {
-        frame = new JFrame("Radio Info");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 800);
-        initMenu();
-        frame.setJMenuBar(appMenuBar);
-
-        channelsTable = new JTable(new DefaultTableModel(new String[]{"Channel", "Description"}, 0));
-        programsTable = new JTable(new DefaultTableModel(new String[]{"Program", "Start time", "End time"}, 0));
-
-
-        frame.getContentPane().add(new JScrollPane(channelsTable), BorderLayout.CENTER);
+        frame.setJMenuBar(appMenuBar.getMenuBar());
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+
+        frame.getContentPane().add(welcomePanel, BorderLayout.CENTER);
+        welcomePanel.setBrowseButton(this::showChannelsTable);
     }
 
-    private void initMenu() {
-        appMenuBar = new JMenuBar();
-
-        channelsMenu = new JMenu("Channels");
-        JMenu viewMenu = new JMenu("View");
-        JMenuItem showChannels = new JMenuItem("Show Channels");
-        showChannels.addActionListener(e -> showChannelsTable());
-        viewMenu.add(showChannels);
-        appMenuBar.add(channelsMenu);
-        appMenuBar.add(viewMenu);
+    public void show() {
+        SwingUtilities.invokeLater(() -> frame.setVisible(true));
     }
-
-
-
-
-
-
 
     public void showChannelsTable() {
         SwingUtilities.invokeLater(() -> {
             frame.getContentPane().removeAll();
-            frame.getContentPane().add(new JScrollPane(channelsTable), BorderLayout.CENTER);
+            frame.getContentPane().add(channelsPanel, BorderLayout.CENTER);
             frame.revalidate();
             frame.repaint();
         });
@@ -64,16 +40,11 @@ public class MainFrame {
     public void showProgramsTable() {
         SwingUtilities.invokeLater(() -> {
             frame.getContentPane().removeAll();
-            frame.getContentPane().add(new JScrollPane(programsTable), BorderLayout.CENTER);
+            JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, programsPanel, detailsPanel);
+            frame.getContentPane().add(splitPane, BorderLayout.CENTER);
+            detailsPanel.clear();
             frame.revalidate();
             frame.repaint();
         });
     }
-
-
-
-        appMenuBar.revalidate();
-        appMenuBar.repaint();
-
-
 }
