@@ -22,4 +22,12 @@ public class WelcomePanel extends JPanel {
         add(centerPanel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
     }
+
+    public void setBrowseButton(Runnable action) {
+        browseButton.addActionListener(e -> {
+            if (action != null) {
+                action.run();
+            }
+        });
+    }
 }
