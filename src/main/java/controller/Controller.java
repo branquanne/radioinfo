@@ -17,6 +17,9 @@ public class Controller {
         programController = new ProgramController(mainFrame);
         channelController = new ChannelController(mainFrame, programController);
 
+        refresher = new RefreshData(programController, channelController::getChannels);
+        mainFrame.setRefreshAction(refresher::manualRefresh);
+
         channelController.start();
         mainFrame.show();
     }
