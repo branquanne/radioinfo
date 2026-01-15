@@ -2,6 +2,7 @@ package controller;
 
 import model.ApiClient;
 import model.Channel;
+import model.ImageLoader;
 import model.Program;
 import view.MainFrame;
 
@@ -11,14 +12,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ProgramController {
-    private MainFrame mainFrame;
-    private ApiClient apiClient = new ApiClient();
+    private final MainFrame mainFrame;
+    private final ApiClient apiClient = new ApiClient();
 
     public ProgramController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
     }
 
-    private void loadProgramsForChannelAsynchronously(Channel channel) {
+    void loadProgramsForChannelAsync(Channel channel) {
         if (channel == null) {
             mainFrame.setProgramsTableModel(createEmptyProgramsModel());
             mainFrame.showProgramsTable();
@@ -45,11 +46,9 @@ public class ProgramController {
                 try {
                     List<Program> programs = get();
                     channel.setPrograms(programs);
-
-                    if (channel == currentlyShowingChannel) {
-                        mainFrame.setProgramsTableModel(createProgramsModel(channel));
-                        mainFrame.showProgramsTable();
-                    }
+                    mainFrame.setProgramsTableModel(createProgramsModel(channel));
+                    setSelectedChannel(channel);
+                    mainFrame.showProgramsTable();
                 } catch (ExecutionException e) {
                     JOptionPane.showMessageDialog(null, "Failed to fetch programs: " + e.getCause(), "Error",
                             JOptionPane.ERROR_MESSAGE);
@@ -91,6 +90,24 @@ public class ProgramController {
         DefaultTableModel loadingModel = new DefaultTableModel(columnNames, 0);
         loadingModel.addRow(new Object[]{"Loading...", "", ""});
         return loadingModel;
+    }
+
+    private void setSelectedChannel(Channel channel) {
+        mainFrame.setProgramsSelectionListener(row -> {
+            if (channel.getPrograms() == null) {
+                return;
+            }
+
+            Program program = channel.getPrograms().get(row);
+            ImageLoader loader = new ImageLoader();
+            ImageIcon icon;
+            try {
+                icon = loader.loadAndScaleImage(program.getThumbnailLink(), 256, 256);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            mainFrame.setProgramDetails(icon, program.getDescription());
+        });
     }
 
 
