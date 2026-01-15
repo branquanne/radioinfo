@@ -20,4 +20,16 @@ public class DetailsPanel extends JPanel {
         add(topPanel, BorderLayout.NORTH);
         add(new JScrollPane(descriptionsArea), BorderLayout.CENTER);
     }
+
+    public void setProgramDetails(ImageIcon image, String description) {
+        SwingUtilities.invokeLater(() -> {
+            imageLabel.setIcon(image);
+            descriptionsArea.setText(description == null ? "" : description);
+            descriptionsArea.setCaretPosition(0);
+        });
+    }
+
+    public void clear() {
+        setProgramDetails(null, null);
+    }
 }
