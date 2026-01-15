@@ -4,7 +4,7 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import model.ApiClient;
 import model.Channel;
 import model.Program;
-import view.Gui;
+import view.MainFrame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class Controller {
 
     private List<Channel> channels;
-    private Gui gui;
+    private MainFrame mainFrame;
     private final ApiClient apiClient = new ApiClient();
     private Channel currentlyShowingChannel;
 
@@ -35,8 +35,8 @@ public class Controller {
     }
 
     private void buildGUI() {
-        gui = new Gui();
-        gui.show();
+        mainFrame = new MainFrame();
+        mainFrame.show();
 
         loadChannelsAsynchronously();
     }
@@ -53,17 +53,16 @@ public class Controller {
                 try {
                     channels = get();
                     DefaultTableModel model = createChannelsModel(channels);
-                    gui.setChannelsTableModel(model);
+                    mainFrame.setChannelsTableModel(model);
 
                     // 64x64 pixels thumbnail with some padding, should be enough
-                    gui.setChannelsTableRowHeight(70);
-                    gui.setChannelsTableColumnWidth(new int[]{70, 240, 480});
+                    mainFrame.setChannelsTableRowHeight(70);
+                    mainFrame.setChannelsTableColumnWidth(new int[]{70, 240, 480});
 
-                    gui.updateMenu(channels, selectedChannel -> {
+                    mainFrame.updateMenu(channels, selectedChannel -> {
                         currentlyShowingChannel = selectedChannel;
                         loadProgramsForChannelAsynchronously(selectedChannel);
                     });
-                    gui.showChannelsTable();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     JOptionPane.showMessageDialog(
@@ -88,19 +87,19 @@ public class Controller {
 
     private void loadProgramsForChannelAsynchronously(Channel channel) {
         if (channel == null) {
-            gui.setProgramsTableModel(createEmptyProgramsModel());
-            gui.showProgramsTable();
+            mainFrame.setProgramsTableModel(createEmptyProgramsModel());
+            mainFrame.showProgramsTable();
             return;
         }
 
         if (channel.getPrograms() != null && !channel.getPrograms().isEmpty()) {
-            gui.setProgramsTableModel(createProgramsModel(channel));
-            gui.showProgramsTable();
+            mainFrame.setProgramsTableModel(createProgramsModel(channel));
+            mainFrame.showProgramsTable();
             return;
         }
 
-        gui.setProgramsTableModel(createLoadingModel());
-        gui.showProgramsTable();
+        mainFrame.setProgramsTableModel(createLoadingModel());
+        mainFrame.showProgramsTable();
 
         SwingWorker<List<Program>, Void> worker = new SwingWorker<>() {
             @Override
@@ -115,8 +114,8 @@ public class Controller {
                     channel.setPrograms(programs);
 
                     if (channel == currentlyShowingChannel) {
-                        gui.setProgramsTableModel(createProgramsModel(channel));
-                        gui.showProgramsTable();
+                        mainFrame.setProgramsTableModel(createProgramsModel(channel));
+                        mainFrame.showProgramsTable();
                     }
                 } catch (ExecutionException e) {
                     JOptionPane.showMessageDialog(null, "Failed to fetch programs: " + e.getCause(), "Error",
