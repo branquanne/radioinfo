@@ -41,8 +41,8 @@ public class ChannelController {
           mainFrame.setChannelsTableModel(model);
 
           // 64x64 pixels thumbnail with some padding, should be enough
-          mainFrame.setChannelsTableRowHeight(70);
-          mainFrame.setChannelsTableColumnWidth(new int[] { 70, 240, 480 });
+          mainFrame.setChannelsTableRowHeight(36);
+          mainFrame.setChannelsTableColumnWidth(new int[]{36, 240, 480});
 
           mainFrame.updateMenu(channels, selectedChannel -> {
             currentlyShowingChannel = selectedChannel;
@@ -71,8 +71,14 @@ public class ChannelController {
   }
 
   private DefaultTableModel createChannelsModel(List<Channel> channels) {
-    String[] columnNames = { "Thumbnail", "Channel", "Description" };
+    String[] columnNames = {"Thumbnail", "Channel", "Description"};
     DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+
+      @Override
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+
       @Override
       public Class<?> getColumnClass(int columnIndex) {
         if (columnIndex == 0) {
@@ -86,11 +92,11 @@ public class ChannelController {
     for (Channel ch : channels) {
       ImageIcon icon = null;
       try {
-        icon = loader.loadAndScaleImage(ch.getThumbnailLink(), 64, 64);
+        icon = loader.loadAndScaleImage(ch.getThumbnailLink(), 32, 32);
       } catch (Exception e) {
         throw new RuntimeException("Failed to load image");
       }
-      model.addRow(new Object[] { icon, ch.getChannelName(), ch.getTagline() });
+      model.addRow(new Object[]{icon, ch.getChannelName(), ch.getTagline()});
     }
 
     return model;
