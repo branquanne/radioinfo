@@ -4,32 +4,32 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DetailsPanel extends JPanel {
-    private final JLabel imageLabel = new JLabel();
-    private final JTextArea descriptionsArea = new JTextArea();
+  private final JLabel imageLabel = new JLabel();
+  private final JTextArea descriptionsArea = new JTextArea();
 
-    public DetailsPanel() {
-        super(new BorderLayout(8, 8));
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+  public DetailsPanel() {
+    super(new BorderLayout(8, 8));
+    imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        descriptionsArea.setLineWrap(true);
-        descriptionsArea.setEditable(false);
+    descriptionsArea.setLineWrap(true);
+    descriptionsArea.setEditable(false);
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(imageLabel, BorderLayout.CENTER);
+    JPanel topPanel = new JPanel(new BorderLayout());
+    topPanel.add(imageLabel, BorderLayout.CENTER);
 
-        add(topPanel, BorderLayout.NORTH);
-        add(new JScrollPane(descriptionsArea), BorderLayout.CENTER);
-    }
+    add(topPanel, BorderLayout.NORTH);
+    add(new JScrollPane(descriptionsArea), BorderLayout.CENTER);
+  }
 
-    public void setProgramDetails(ImageIcon image, String description) {
-        SwingUtilities.invokeLater(() -> {
-            imageLabel.setIcon(image);
-            descriptionsArea.setText(description == null ? "" : description);
-            descriptionsArea.setCaretPosition(0);
-        });
-    }
+  public void setProgramDetails(ImageIcon image, String description) {
+    SwingUtilities.invokeLater(() -> {
+      imageLabel.setIcon(image);
+      descriptionsArea.setText(description == null ? "" : description);
+      descriptionsArea.setCaretPosition(0);
+    });
+  }
 
-    public void clear() {
-        setProgramDetails(null, null);
-    }
+  public void clear() {
+    setProgramDetails(null, null);
+  }
 }

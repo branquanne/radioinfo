@@ -10,40 +10,41 @@ import java.util.Collections;
 import java.util.List;
 
 public class Parser {
-    private final String json;
-    private final ObjectMapper mapper = new ObjectMapper();
+  private final String json;
 
-    public Parser(HttpResponse<String> response) {
-        this.json = response.body();
+  private final ObjectMapper mapper = new ObjectMapper();
+
+  public Parser(HttpResponse<String> response) {
+    this.json = response.body();
+  }
+
+  public List<Channel> parseChannels() {
+    try {
+      JsonNode root = mapper.readTree(json);
+      JsonNode channelIsNode = root.path("channels");
+      if (channelIsNode.isMissingNode() || !channelIsNode.isArray()) {
+        return Collections.emptyList();
+      }
+      return mapper.convertValue(channelIsNode, new TypeReference<>() {
+      });
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
 
-    public List<Channel> parseChannels() {
-        try {
-            JsonNode root = mapper.readTree(json);
-            JsonNode channelIsNode = root.path("channels");
-            if (channelIsNode.isMissingNode() || !channelIsNode.isArray()) {
-                return Collections.emptyList();
-            }
-            return mapper.convertValue(channelIsNode, new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+  }
 
+  public List<Program> parsePrograms() {
+    try {
+      JsonNode root = mapper.readTree(json);
+      JsonNode programsNode = root.path("schedule");
+      if (programsNode.isMissingNode() || !programsNode.isArray()) {
+        return Collections.emptyList();
+      }
+      return mapper.convertValue(programsNode, new TypeReference<>() {
+      });
+
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
-
-    public List<Program> parsePrograms() {
-        try {
-            JsonNode root = mapper.readTree(json);
-            JsonNode programsNode = root.path("schedule");
-            if (programsNode.isMissingNode() || !programsNode.isArray()) {
-                return Collections.emptyList();
-            }
-            return mapper.convertValue(programsNode, new TypeReference<>() {
-            });
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+  }
 }

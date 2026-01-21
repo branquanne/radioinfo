@@ -6,27 +6,26 @@ import view.MainFrame;
 import javax.swing.*;
 
 public class Controller {
-    private MainFrame mainFrame;
-    private ProgramController programController;
-    private ChannelController channelController;
-    private RefreshData refresher;
+  private MainFrame mainFrame;
+  private ProgramController programController;
+  private ChannelController channelController;
+  private RefreshData refresher;
 
-    public Controller() {
-        mainFrame = new MainFrame();
+  public Controller() {
+    mainFrame = new MainFrame();
 
-        programController = new ProgramController(mainFrame);
-        channelController = new ChannelController(mainFrame, programController);
+    programController = new ProgramController(mainFrame);
+    channelController = new ChannelController(mainFrame, programController);
 
-        refresher = new RefreshData(programController, channelController::getChannels);
-        mainFrame.setRefreshAction(refresher::manualRefresh);
+    refresher = new RefreshData(programController, channelController::getChannels);
+    mainFrame.setRefreshAction(refresher::manualRefresh);
 
-        channelController.start();
-        mainFrame.show();
-    }
+    channelController.start();
+    mainFrame.show();
+  }
 
-
-    public static void main(String[] args) {
-        FlatMacLightLaf.setup();
-        SwingUtilities.invokeLater(Controller::new);
-    }
+  public static void main(String[] args) {
+    FlatMacLightLaf.setup();
+    SwingUtilities.invokeLater(Controller::new);
+  }
 }
