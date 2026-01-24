@@ -66,12 +66,12 @@ public class ProgramController {
   }
 
   private DefaultTableModel createEmptyProgramsModel() {
-    String[] columnNames = {"Program", "Start", "End"};
+    String[] columnNames = { "Program", "Start", "End" };
     return new DefaultTableModel(columnNames, 0);
   }
 
   private DefaultTableModel createProgramsModel(Channel channel) {
-    String[] columnNames = {"Program", "Start", "End"};
+    String[] columnNames = { "Program", "Start", "End" };
     DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
       @Override
       public boolean isCellEditable(int row, int column) {
@@ -105,7 +105,7 @@ public class ProgramController {
         }
       }
       filteredPrograms.add(program);
-      model.addRow(new Object[]{
+      model.addRow(new Object[] {
           program.getProgramTitle(),
           program.getStartTimeString(),
           program.getEndTimeString()
@@ -116,11 +116,10 @@ public class ProgramController {
   }
 
   private DefaultTableModel createLoadingModel() {
-    String[] columnNames = {"Program", "Start", "End"};
+    String[] columnNames = { "Program", "Start", "End" };
     DefaultTableModel loadingModel = new DefaultTableModel(columnNames, 0);
 
-
-    loadingModel.addRow(new Object[]{"Loading...", "", ""});
+    loadingModel.addRow(new Object[] { "Loading...", "", "" });
     displayedPrograms = Collections.emptyList();
     return loadingModel;
   }

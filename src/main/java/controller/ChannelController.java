@@ -15,7 +15,6 @@ public class ChannelController {
   private ProgramController programController;
   private ApiClient apiClient = new ApiClient();
   private List<Channel> channels;
-  private Channel currentlyShowingChannel;
 
   public ChannelController(MainFrame mainFrame, ProgramController programController) {
     this.mainFrame = mainFrame;
@@ -40,12 +39,10 @@ public class ChannelController {
           DefaultTableModel model = createChannelsModel(channels);
           mainFrame.setChannelsTableModel(model);
 
-          // 64x64 pixels thumbnail with some padding, should be enough
           mainFrame.setChannelsTableRowHeight(36);
-          mainFrame.setChannelsTableColumnWidth(new int[]{36, 240, 480});
+          mainFrame.setChannelsTableColumnWidth(new int[] { 32, 240, 480 });
 
           mainFrame.updateMenu(channels, selectedChannel -> {
-            currentlyShowingChannel = selectedChannel;
             programController.loadProgramsForChannelAsync(selectedChannel);
           });
         } catch (InterruptedException e) {
@@ -71,7 +68,7 @@ public class ChannelController {
   }
 
   private DefaultTableModel createChannelsModel(List<Channel> channels) {
-    String[] columnNames = {"Thumbnail", "Channel", "Description"};
+    String[] columnNames = { "Thumbnail", "Channel", "Description" };
     DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
 
       @Override
@@ -96,7 +93,7 @@ public class ChannelController {
       } catch (Exception e) {
         throw new RuntimeException("Failed to load image");
       }
-      model.addRow(new Object[]{icon, ch.getChannelName(), ch.getTagline()});
+      model.addRow(new Object[] { icon, ch.getChannelName(), ch.getTagline() });
     }
 
     return model;
