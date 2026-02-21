@@ -7,8 +7,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 public class RefreshData {
+  private static final Logger LOGGER = Logger.getLogger(RefreshData.class.getName());
+
   private final ScheduledExecutorService scheduler;
   private final ProgramController programController;
   private final Supplier<List<Channel>> channelsProvider;
@@ -38,11 +41,11 @@ public class RefreshData {
             programController.loadProgramsForChannelAsync(ch);
           }
         } catch (Exception e) {
-          throw new RuntimeException(e);
+          LOGGER.warning("Failed to refresh channel: " + (ch == null ? "" : ch.getChannelName()) + ": " + (e.getMessage() == null ? "Unknown error" : e.getMessage()));
         }
       }
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      LOGGER.warning("Scheduled refresh failed: " + (e.getMessage() == null ? "Unknown error:" : e.getMessage()));
     }
   }
 
