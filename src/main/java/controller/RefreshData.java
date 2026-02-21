@@ -12,12 +12,11 @@ public class RefreshData {
   private final ScheduledExecutorService scheduler;
   private final ProgramController programController;
   private final Supplier<List<Channel>> channelsProvider;
-  private final long periodSeconds;
 
   public RefreshData(ProgramController programController, Supplier<List<Channel>> channelsProvider) {
     this.programController = programController;
     this.channelsProvider = channelsProvider;
-    this.periodSeconds = 3600L;
+    long periodSeconds = 3600L;
     this.scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
       Thread t = new Thread(r, "refresh-scheduler");
       t.setDaemon(true);

@@ -42,7 +42,7 @@ public class ProgramController {
     SwingWorker<List<Program>, Void> worker = new SwingWorker<>() {
       @Override
       protected List<Program> doInBackground() {
-        return apiClient.fetchProgramsForChannel(channel.getChannelId());
+        return apiClient.fetchProgramsForChannel(channel.getChannelId(), null);
       }
 
       @Override
@@ -50,6 +50,7 @@ public class ProgramController {
         try {
           List<Program> programs = get();
           channel.setPrograms(programs);
+          channel.setLastFetched(LocalDateTime.now());
           mainFrame.setProgramsTableModel(createProgramsModel(channel));
           setSelectedChannel(channel);
           mainFrame.showProgramsTable();
@@ -66,12 +67,12 @@ public class ProgramController {
   }
 
   private DefaultTableModel createEmptyProgramsModel() {
-    String[] columnNames = { "Program", "Start", "End" };
+    String[] columnNames = {"Program", "Start", "End"};
     return new DefaultTableModel(columnNames, 0);
   }
 
   private DefaultTableModel createProgramsModel(Channel channel) {
-    String[] columnNames = { "Program", "Start", "End" };
+    String[] columnNames = {"Program", "Start", "End"};
     DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
       @Override
       public boolean isCellEditable(int row, int column) {
@@ -85,13 +86,10 @@ public class ProgramController {
 
     // Får inte riktigt detta med timmarna att fungera och vet inte riktigt vart jag
     // går fel :/
-    LocalDateTime referencePoint = channel.getLastFetched();
-    LocalDateTime windowStart = null;
-    LocalDateTime windowEnd = null;
-    if (referencePoint != null) {
-      windowStart = referencePoint.minusHours(12);
-      windowEnd = referencePoint.plusHours(12);
-    }
+    // Use the channel's lastFetched time as the reference; fall back to now if missing.
+    LocalDateTime referencePoint = channel.getLastFetched() == null ? LocalDateTime.now() : channel.getLastFetched();
+    LocalDateTime windowStart = referencePoint.minusHours(12);
+    LocalDateTime windowEnd = referencePoint.plusHours(12);
 
     List<Program> filteredPrograms = new ArrayList<>();
     for (Program program : channel.getPrograms()) {
@@ -99,13 +97,12 @@ public class ProgramController {
       if (start == null) {
         continue;
       }
-      if (windowStart != null && windowEnd != null) {
-        if (start.isBefore(windowStart) || start.isAfter(windowEnd)) {
-          continue;
-        }
+      // Keep only programs that start within the 12-hour window around the reference point.
+      if (start.isBefore(windowStart) || start.isAfter(windowEnd)) {
+        continue;
       }
       filteredPrograms.add(program);
-      model.addRow(new Object[] {
+      model.addRow(new Object[]{
           program.getProgramTitle(),
           program.getStartTimeString(),
           program.getEndTimeString()
@@ -116,10 +113,10 @@ public class ProgramController {
   }
 
   private DefaultTableModel createLoadingModel() {
-    String[] columnNames = { "Program", "Start", "End" };
+    String[] columnNames = {"Program", "Start", "End"};
     DefaultTableModel loadingModel = new DefaultTableModel(columnNames, 0);
 
-    loadingModel.addRow(new Object[] { "Loading...", "", "" });
+    loadingModel.addRow(new Object[]{"Loading...", "", ""});
     displayedPrograms = Collections.emptyList();
     return loadingModel;
   }

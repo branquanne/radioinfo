@@ -6,18 +6,17 @@ import view.MainFrame;
 import javax.swing.*;
 
 public class Controller {
-  private MainFrame mainFrame;
-  private ProgramController programController;
-  private ChannelController channelController;
-  private RefreshData refresher;
 
   public Controller() {
-    mainFrame = new MainFrame();
+    MainFrame mainFrame = new MainFrame();
 
-    programController = new ProgramController(mainFrame);
-    channelController = new ChannelController(mainFrame, programController);
+    ProgramController programController = new ProgramController(mainFrame);
+    ChannelController channelController = new ChannelController(mainFrame, programController);
 
-    refresher = new RefreshData(programController, channelController::getChannels);
+    RefreshData refresher = new RefreshData(
+        programController,
+        channelController::getChannels
+    );
     mainFrame.setRefreshAction(refresher::manualRefresh);
 
     channelController.start();
