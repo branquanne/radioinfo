@@ -28,9 +28,10 @@ public class ApiClient {
       Parser p = new Parser(response);
       return p.parseChannels();
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       throw new RuntimeException("Channel fetch interrupted", e);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to fetch channels" + e.getMessage(), e);
+      throw new RuntimeException("Failed to fetch channels: " + e.getMessage(), e);
     }
 
   }
@@ -54,13 +55,12 @@ public class ApiClient {
         }
       }
       return combined;
-    } catch (InterruptedException | IOException e) {
-      throw new RuntimeException(e);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new RuntimeException("Program fetch interrupted", e);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to fetch programs: " + e.getMessage(), e);
     }
 
-  }
-
-  public List<Program> fetchProgramsForChannel(int channelId) {
-    return fetchProgramsForChannel(channelId, null);
   }
 }

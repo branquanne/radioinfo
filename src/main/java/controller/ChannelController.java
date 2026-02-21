@@ -42,9 +42,7 @@ public class ChannelController {
           mainFrame.setChannelsTableRowHeight(36);
           mainFrame.setChannelsTableColumnWidth(new int[]{32, 240, 480});
 
-          mainFrame.updateMenu(channels, selectedChannel -> {
-            programController.loadProgramsForChannelAsync(selectedChannel);
-          });
+          mainFrame.updateMenu(channels, programController::loadProgramsForChannelAsync);
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
           JOptionPane.showMessageDialog(
@@ -58,7 +56,7 @@ public class ChannelController {
               : e.getMessage();
           JOptionPane.showMessageDialog(
               null,
-              "Failed to fetch data: " + message,
+              "Failed to fetch channels: " + (message == null ? "Unknown error" : message),
               "Error",
               JOptionPane.ERROR_MESSAGE);
         }
@@ -89,9 +87,10 @@ public class ChannelController {
     for (Channel ch : channels) {
       ImageIcon icon = null;
       try {
-        icon = loader.loadAndScaleImage(ch.getThumbnailLink(), 32, 32);
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to load image");
+        if (ch.getThumbnailLink() != null && !ch.getThumbnailLink().isBlank()) {
+          icon = loader.loadAndScaleImage(ch.getThumbnailLink(), 32, 32);
+        }
+      } catch (Exception ignored) {
       }
       model.addRow(new Object[]{icon, ch.getChannelName(), ch.getTagline()});
     }

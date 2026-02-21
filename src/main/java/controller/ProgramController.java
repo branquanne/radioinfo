@@ -52,10 +52,11 @@ public class ProgramController {
           channel.setPrograms(programs);
           channel.setLastFetched(LocalDateTime.now());
           mainFrame.setProgramsTableModel(createProgramsModel(channel));
-          setSelectedChannel(channel);
+          setSelectedChannel();
           mainFrame.showProgramsTable();
         } catch (ExecutionException e) {
-          JOptionPane.showMessageDialog(null, "Failed to fetch programs: " + e.getCause(), "Error",
+          String message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+          JOptionPane.showMessageDialog(null, "Failed to fetch programs: " + (message == null ? "Unknown error" : message), "Error",
               JOptionPane.ERROR_MESSAGE);
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
@@ -84,10 +85,7 @@ public class ProgramController {
       return model;
     }
 
-    // Får inte riktigt detta med timmarna att fungera och vet inte riktigt vart jag
-    // går fel :/
-    // Use the channel's lastFetched time as the reference; fall back to now if missing.
-    LocalDateTime referencePoint = channel.getLastFetched() == null ? LocalDateTime.now() : channel.getLastFetched();
+    LocalDateTime referencePoint = LocalDateTime.now();
     LocalDateTime windowStart = referencePoint.minusHours(12);
     LocalDateTime windowEnd = referencePoint.plusHours(12);
 
@@ -97,10 +95,12 @@ public class ProgramController {
       if (start == null) {
         continue;
       }
-      // Keep only programs that start within the 12-hour window around the reference point.
-      if (start.isBefore(windowStart) || start.isAfter(windowEnd)) {
+      LocalDateTime end = program.getEndTime() == null ? start : program.getEndTime();
+
+      if (end.isBefore(windowStart) || start.isAfter(windowEnd)) {
         continue;
       }
+
       filteredPrograms.add(program);
       model.addRow(new Object[]{
           program.getProgramTitle(),
@@ -121,9 +121,9 @@ public class ProgramController {
     return loadingModel;
   }
 
-  private void setSelectedChannel(Channel channel) {
+  private void setSelectedChannel() {
     mainFrame.setProgramsSelectionListener(row -> {
-      if (displayedPrograms == null) {
+      if (displayedPrograms == null || row < 0 || row >= displayedPrograms.size()) {
         return;
       }
 
@@ -133,7 +133,7 @@ public class ProgramController {
       try {
         icon = loader.loadAndScaleImage(program.getThumbnailLink(), 256, 256);
       } catch (Exception e) {
-        throw new RuntimeException(e);
+        icon = null;
       }
       mainFrame.setProgramDetails(icon, program.getDescription());
     });
