@@ -56,7 +56,7 @@ public class ChannelController {
               : e.getMessage();
           JOptionPane.showMessageDialog(
               null,
-              "Failed to fetch channels: " + (message == null ? "Unknown error" : message),
+              "Failed to fetch channels!",
               "Error",
               JOptionPane.ERROR_MESSAGE);
         }

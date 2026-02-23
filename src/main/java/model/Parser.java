@@ -28,7 +28,7 @@ public class Parser {
       return mapper.convertValue(channelIsNode, new TypeReference<>() {
       });
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Failed to parse programs");
     }
 
   }
@@ -44,7 +44,7 @@ public class Parser {
       });
 
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Failed to parse programs!");
     }
   }
 }

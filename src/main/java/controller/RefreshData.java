@@ -41,11 +41,11 @@ public class RefreshData {
             programController.loadProgramsForChannelAsync(ch);
           }
         } catch (Exception e) {
-          LOGGER.warning("Failed to refresh channel: " + (ch == null ? "" : ch.getChannelName()) + ": " + (e.getMessage() == null ? "Unknown error" : e.getMessage()));
+          LOGGER.warning("Failed to refresh channels!");
         }
       }
     } catch (Exception e) {
-      LOGGER.warning("Scheduled refresh failed: " + (e.getMessage() == null ? "Unknown error:" : e.getMessage()));
+      LOGGER.warning("Scheduled refresh failed");
     }
   }
 

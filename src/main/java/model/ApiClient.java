@@ -57,9 +57,9 @@ public class ApiClient {
       return combined;
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      throw new RuntimeException("Program fetch interrupted", e);
+      throw new RuntimeException("Program fetch interrupted");
     } catch (IOException e) {
-      throw new RuntimeException("Failed to fetch programs: " + e.getMessage(), e);
+      throw new RuntimeException("Failed to fetch programs!");
     }
 
   }
